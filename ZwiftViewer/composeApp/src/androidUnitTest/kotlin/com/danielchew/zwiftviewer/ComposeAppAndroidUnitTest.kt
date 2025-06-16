@@ -1,4 +1,4 @@
-package com.danielchew.zwiftviewer.zwiftviewer
+package com.danielchew.zwiftviewer
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

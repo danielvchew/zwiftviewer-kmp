@@ -1,4 +1,4 @@
-package com.danielchew.zwiftviewer.zwiftviewer
+package com.danielchew.zwiftviewer
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
