@@ -1,4 +1,4 @@
-package com.danielchew.zwiftviewer.zwiftviewer
+package com.danielchew.zwiftviewer
 
 import platform.UIKit.UIDevice
 
