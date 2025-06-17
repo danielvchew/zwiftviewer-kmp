@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1BC89CE62DFE1C5B00E0ADB1 /* Shared.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC89CE42DFE1C3800E0ADB1 /* Shared.xcframework */; };
-		1BC89CE72DFE1C5B00E0ADB1 /* Shared.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC89CE42DFE1C3800E0ADB1 /* Shared.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B6353472E00AFF500C76C3B /* Shared.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; };
+		1B6353482E00AFF500C76C3B /* Shared.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,13 +29,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1BC89CE82DFE1C5B00E0ADB1 /* Embed Frameworks */ = {
+		1B6353492E00AFF500C76C3B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1BC89CE72DFE1C5B00E0ADB1 /* Shared.xcframework in Embed Frameworks */,
+				1B6353482E00AFF500C76C3B /* Shared.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -43,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1B6353462E00AFF500C76C3B /* Shared.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Shared.xcframework; path = ../../shared/build/XCFrameworks/release/Shared.xcframework; sourceTree = "<group>"; };
 		1BC89CBA2DFE1B6200E0ADB1 /* ZwiftVieweriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZwiftVieweriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BC89CC72DFE1B6300E0ADB1 /* ZwiftVieweriOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZwiftVieweriOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BC89CD12DFE1B6300E0ADB1 /* ZwiftVieweriOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZwiftVieweriOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BC89CE62DFE1C5B00E0ADB1 /* Shared.xcframework in Frameworks */,
+				1B6353472E00AFF500C76C3B /* Shared.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +94,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B6353452E00AFF500C76C3B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1B6353462E00AFF500C76C3B /* Shared.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1BC89CB12DFE1B6200E0ADB1 = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +110,7 @@
 				1BC89CD42DFE1B6300E0ADB1 /* ZwiftVieweriOSUITests */,
 				1BC89CBB2DFE1B6200E0ADB1 /* Products */,
 				1BC89CE42DFE1C3800E0ADB1 /* Shared.xcframework */,
+				1B6353452E00AFF500C76C3B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,7 +134,7 @@
 				1BC89CB62DFE1B6200E0ADB1 /* Sources */,
 				1BC89CB72DFE1B6200E0ADB1 /* Frameworks */,
 				1BC89CB82DFE1B6200E0ADB1 /* Resources */,
-				1BC89CE82DFE1C5B00E0ADB1 /* Embed Frameworks */,
+				1B6353492E00AFF500C76C3B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

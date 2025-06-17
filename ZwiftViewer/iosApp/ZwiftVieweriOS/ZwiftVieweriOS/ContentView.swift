@@ -14,6 +14,15 @@ struct ContentView: View {
             Text("From Kotlin: \(Greeting().greet())")
                 }
         .padding()
+        .task {
+            let bridge = FakeRideApiBridge()
+            do {
+                let rides = try await bridge.load()
+                print("Loaded \(rides.count) rides")
+            } catch {
+                print("Failed to load rides: \(error)")
+            }
+        }
     }
 }
 

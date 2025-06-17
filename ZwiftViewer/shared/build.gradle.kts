@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    kotlin("plugin.serialization") version "2.1.21"
 }
 
 kotlin {
@@ -27,6 +28,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // put your Multiplatform dependencies here
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+            implementation("io.ktor:ktor-client-core:2.3.2")
+            implementation("io.ktor:ktor-client-cio:2.3.2")
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.2")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -35,7 +41,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.danielchew.zwiftviewer.zwiftviewer.shared"
+    namespace = "com.danielchew.zwiftviewer.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

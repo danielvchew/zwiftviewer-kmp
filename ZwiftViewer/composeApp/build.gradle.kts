@@ -33,6 +33,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            implementation("io.ktor:ktor-client-core:2.3.2")
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.2")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.2")
+            implementation("io.ktor:ktor-client-cio:2.3.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -41,11 +45,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.danielchew.zwiftviewer.zwiftviewer"
+    namespace = "com.danielchew.zwiftviewer"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.danielchew.zwiftviewer.zwiftviewer"
+        applicationId = "com.danielchew.zwiftviewer"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -68,11 +72,12 @@ android {
 
     lint {
         disable += "NullSafeMutableLiveData"
+//        disable += "LocalContextConfigurationRead"
     }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    lintChecks("com.android.tools.lint:lint-checks:31.2.1")
+    lintChecks(libs.lint.checks)
 }
 
