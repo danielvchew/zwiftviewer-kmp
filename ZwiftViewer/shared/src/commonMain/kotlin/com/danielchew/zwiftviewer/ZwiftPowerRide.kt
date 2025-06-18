@@ -2,8 +2,12 @@ package com.danielchew.zwiftviewer
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.experimental.ExperimentalObjCName
+import kotlin.native.ObjCName
 
+@OptIn(ExperimentalObjCName::class)
 @Serializable
+@ObjCName("ZwiftPowerRide", exact = true)
 data class ZwiftPowerRide(
     val date: Long,
     val zaid: String,

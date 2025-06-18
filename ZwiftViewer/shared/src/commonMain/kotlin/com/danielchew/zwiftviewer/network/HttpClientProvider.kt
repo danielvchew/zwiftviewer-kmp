@@ -1,23 +1,26 @@
 package com.danielchew.zwiftviewer.network
 
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-val ktorClient = HttpClient(CIO) {
+expect fun getPlatformEngine(): HttpClientEngineFactory<*>
+
+val ktorClient = HttpClient(getPlatformEngine()) {
     install(ContentNegotiation) {
         json(Json {
-            // safely ignore extra fields in JSON
             ignoreUnknownKeys = true
         })
     }
+}
 
+object KtorClientProvider {
     fun provideAuthenticatedClient(cookies: Map<String, String>): HttpClient {
-        return HttpClient(CIO) {
+        return HttpClient(getPlatformEngine()) {
             install(ContentNegotiation) {
                 json(Json { ignoreUnknownKeys = true })
             }

@@ -34,8 +34,18 @@ class ZwiftPowerProfileApi(private val client: HttpClient) : ZwiftProfileApi {
             println("ZwiftDebug: Raw response: $response")
 
             val jsonElement = Json.parseToJsonElement(response)
-            val rideList = jsonElement.jsonObject["data"]?.let { jsonData ->
-                Json.decodeFromJsonElement<List<ZwiftPowerRide>>(jsonData)
+            println("ZwiftDebug: JSON Element = $jsonElement")
+
+            val jsonData = jsonElement.jsonObject["data"]
+            println("ZwiftDebug: data field = $jsonData")
+
+            val rideList = jsonData?.let {
+                try {
+                    Json.decodeFromJsonElement<List<ZwiftPowerRide>>(it)
+                } catch (e: Exception) {
+                    println("ZwiftDebug: Failed to decode data array: ${e.message}")
+                    emptyList()
+                }
             } ?: emptyList()
             rideList.reversed()
         } catch (e: Exception) {

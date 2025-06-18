@@ -14,15 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.tooling.preview.Preview
+import com.danielchew.zwiftviewer.network.KtorClientProvider.provideAuthenticatedClient
 import com.danielchew.zwiftviewer.network.RideUiState
 import com.danielchew.zwiftviewer.network.ZwiftPowerProfileApi
-import com.danielchew.zwiftviewer.network.provideAuthenticatedClient
 import com.danielchew.zwiftviewer.ui.RideCard
 import com.danielchew.zwiftviewer.viewmodel.RideViewModel
 import com.danielchew.zwiftviewer.util.extractCookiesForDomain
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
+import com.danielchew.zwiftviewer.utils.extractZwiftPowerUserId
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,12 +61,13 @@ class MainActivity : ComponentActivity() {
 
                         // Check login state in LaunchedEffect, set isLoggedInState, and load rides if possible
                         LaunchedEffect(parsedCookies) {
-                            val html = client.get("https://zwiftpower.com/profile.php").bodyAsText()
-                            val isLoggedIn = "profile.php?z=" in html || "Logout" in html
-                            val regex = "profile\\.php\\?z=(\\d+)".toRegex()
-                            val match = regex.find(html)
-                            val profileId = match?.groupValues?.get(1)
-                            Log.d("ZwiftDebug", "Parsed ZwiftPower user ID: $profileId")
+                            val profileId = extractZwiftPowerUserId(client)
+                            val isLoggedIn = profileId != null
+                            if (profileId == null) {
+                                Log.e("ZwiftDebug", "Failed to extract ZwiftPower user ID. Login likely failed.")
+                            } else {
+                                Log.d("ZwiftDebug", "Parsed ZwiftPower user ID: $profileId")
+                            }
 
                             if (isLoggedIn && profileId != null) {
                                 viewModel.loadRides(profileId, parsedCookies)
