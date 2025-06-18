@@ -77,7 +77,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.navigation.compose)
     debugImplementation(compose.uiTooling)
     lintChecks(libs.lint.checks)
 }
-

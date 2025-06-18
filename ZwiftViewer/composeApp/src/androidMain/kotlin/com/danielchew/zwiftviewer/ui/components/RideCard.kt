@@ -1,4 +1,4 @@
-package com.danielchew.zwiftviewer.ui
+package com.danielchew.zwiftviewer.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
