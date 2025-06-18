@@ -8,14 +8,15 @@
 import SwiftUI
 import WebKit
 
-struct ZwiftPowerLoginView: UIViewRepresentable {
+struct LoginView: UIViewRepresentable {
     let onCookiesExtracted: ([String: String]) -> Void
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         if let url = URL(string: "https://zwiftpower.com") {
-            webView.load(URLRequest(url: url))
+            let loginURL = URL(string: "https://zwiftpower.com/auth/login")!
+            webView.load(URLRequest(url: loginURL))
         }
         return webView
     }
