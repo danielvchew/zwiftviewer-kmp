@@ -2,7 +2,7 @@ package com.danielchew.zwiftviewer.network
 
 import com.danielchew.zwiftviewer.Ride
 
-class FakeRideApi : RideApi {
+class FakeRideApi : MockRideApi {
     override suspend fun getAllRides(): List<Ride> {
         val mockRide = Ride(
             id = "ride_123",
