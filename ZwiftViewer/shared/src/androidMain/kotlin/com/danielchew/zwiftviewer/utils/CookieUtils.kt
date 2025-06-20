@@ -1,9 +1,9 @@
-package com.danielchew.zwiftviewer.util
+package com.danielchew.zwiftviewer.utils
 
 import android.util.Log
 import android.webkit.CookieManager
 
-fun extractCookiesForDomain(domain: String): Map<String, String> {
+actual fun extractCookiesForDomain(domain: String): Map<String, String> {
     val cookieManager = CookieManager.getInstance()
     val rawCookies = cookieManager.getCookie(domain) ?: return emptyMap()
 
