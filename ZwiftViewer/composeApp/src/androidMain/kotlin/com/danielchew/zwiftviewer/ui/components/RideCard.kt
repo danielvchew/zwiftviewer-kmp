@@ -43,7 +43,7 @@ fun RideCard(ride: DataItem) {
         val date = ride.date?.toInt()?.let { formatUnixDate(it.toLong()) } ?: "—"
         val sport = ride.sport ?: "—"
         val elapsed = ride.elapsed?.toInt()?.let { formatElapsed(it) } ?: "—"
-        val distanceMi = ride.distance?.let { String.format(Locale.US, "%.2f", it * 0.000621371) } ?: "—"
+        val distanceMi = ride.distance?.let { String.format(Locale.US, "%.1f", it * 0.000621371) } ?: "—"
         val elevationFt = ride.elevation?.let { String.format(Locale.US, "%.0f", it * 3.28084) } ?: "—"
         val avgSpeed = ride.avgSpeed?.let { String.format(Locale.US, "%.2f km/h", it) } ?: "—"
         val avgHr = statLabelOrDash(ride.avgHr)
