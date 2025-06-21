@@ -1,9 +1,9 @@
 package com.danielchew.zwiftviewer.ui.ridedetail
 
-import com.danielchew.zwiftviewer.ZwiftPowerRide
+import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse
 
 data class RideDetailUiState(
-    val ride: ZwiftPowerRide? = null,
+    val ride: ZwiftPowerActivityResponse.DataItem? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

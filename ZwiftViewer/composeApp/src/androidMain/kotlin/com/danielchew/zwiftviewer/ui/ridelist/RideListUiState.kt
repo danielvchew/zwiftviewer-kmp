@@ -1,11 +1,7 @@
 package com.danielchew.zwiftviewer.ui.ridelist
 
-data class Ride(
-    val id: String,
-    val name: String,
-    val date: String
-)
+import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse
 
 data class RideListUiState(
-    val rides: List<Ride> = emptyList()
+    val rides: List<ZwiftPowerActivityResponse.DataItem>
 )
