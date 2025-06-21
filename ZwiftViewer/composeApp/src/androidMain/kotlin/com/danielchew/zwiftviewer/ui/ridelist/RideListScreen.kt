@@ -40,9 +40,21 @@ fun RideListScreen(navController: NavController) {
         }
 
         items(uiState.rides) { ride ->
-            val distanceMi = String.format(Locale.US, "%.2f", (ride.distance ?: 0.0) * 0.000621371)
-            val elevationFt = String.format(Locale.US, "%.0f", (ride.elevation ?: 0.0).toDouble() * 3.28084)
-            val elapsedTime = ride.elapsed?.label() ?: "—"
+            val distanceMi = String.format(Locale.US, "%.1f mi", (ride.distance ?: 0.0) * 0.000621371)
+            val elevationFt = String.format(Locale.US, "%.0f ft", (ride.elevation ?: 0.0).toDouble() * 3.28084)
+            val elapsedSeconds = ride.elapsed?.toInt() ?: 0
+            val hours = elapsedSeconds / 3600
+            val minutes = (elapsedSeconds % 3600) / 60
+            val elapsedTime = buildString {
+                if (hours > 0) append("$hours h ")
+                append("$minutes m")
+            }
+
+            val rideDateStr = ride.date?.toInt()?.let { timestamp ->
+                val millis = timestamp * 1000L
+                val sdf = java.text.SimpleDateFormat("MMM d, yyyy", Locale.US)
+                sdf.format(java.util.Date(millis))
+            } ?: "—"
 
             Card(
                 modifier = Modifier
@@ -54,13 +66,13 @@ fun RideListScreen(navController: NavController) {
                     }
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = ride.date?.label() ?: "—", style = MaterialTheme.typography.bodySmall)
+                    Text(text = rideDateStr, style = MaterialTheme.typography.bodySmall)
                     Text(text = ride.title ?: "Untitled Ride", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(4.dp))
                     Row {
-                        Text(text = "Distance: $distanceMi mi", modifier = Modifier.weight(1f))
-                        Text(text = "Elev Gain: $elevationFt ft", modifier = Modifier.weight(1f))
-                        Text(text = "Time: $elapsedTime", modifier = Modifier.weight(1f))
+                        Text(text = distanceMi, modifier = Modifier.weight(1f))
+                        Text(text = elevationFt, modifier = Modifier.weight(1f))
+                        Text(text = elapsedTime, modifier = Modifier.weight(1f))
                     }
                 }
             }
