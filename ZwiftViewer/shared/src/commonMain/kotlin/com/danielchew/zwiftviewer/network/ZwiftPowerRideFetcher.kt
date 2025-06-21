@@ -9,7 +9,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 
-class ZwiftPowerRideFetcher(private val client: HttpClient) : RideFetcher {
+object ZwiftPowerRideFetcher : RideFetcher {
 
     override suspend fun getUserRideHistory(
         zwiftId: String,
@@ -18,11 +18,14 @@ class ZwiftPowerRideFetcher(private val client: HttpClient) : RideFetcher {
         return try {
             val timestamp = getCurrentTimeMillis()
             val url = "https://zwiftpower.com/api3.php?do=activities&z=$zwiftId&_=$timestamp"
-            println("ZwiftDebug: 🔗 Requesting $url")
+            println("ZwiftDebug: Requesting $url")
 
+            if (cookieHeader.isBlank()) println("ZwiftDebug: Warning: cookieHeader is blank")
+
+            val client = HttpClient()
             val response: HttpResponse = client.get(url) {
-                println("ZwiftDebug: 🧾 Sending headers with User-Agent and full cookies")
-                println("ZwiftDebug: 🍪 Final Cookie Header: $cookieHeader")
+                println("ZwiftDebug: Sending headers with User-Agent and full cookies")
+                println("ZwiftDebug: Final Cookie Header: $cookieHeader")
                 headers {
                     append(HttpHeaders.Accept, "application/json, text/javascript, */*; q=0.01")
                     append(HttpHeaders.Referrer, "https://zwiftpower.com/profile.php?z=$zwiftId")
@@ -32,23 +35,23 @@ class ZwiftPowerRideFetcher(private val client: HttpClient) : RideFetcher {
                 }
             }
 
-            println("ZwiftDebug: 🟦 Status Code: ${response.status}")
+            println("ZwiftDebug: Status Code: ${response.status}")
             val rawBody = response.bodyAsText()
-            println("ZwiftDebug: 🟨 RAW BODY (first 500 chars):\n${rawBody.take(500)}")
+            println("ZwiftDebug: RAW BODY (first 500 chars):\n${rawBody.take(500)}")
 
             val json = Json { ignoreUnknownKeys = true }
 
             val parsed = try {
                 json.decodeFromString<ZwiftPowerActivityResponse>(rawBody)
             } catch (e: Exception) {
-                println("ZwiftDebug: 🟥 PARSE ERROR: ${e.message}")
+                println("ZwiftDebug: Parse error: ${e.message}")
                 throw e
             }
 
-            return parsed.data
+            return parsed.data.reversed()
 
         } catch (e: Exception) {
-            println("ZwiftDebug: 🟥 Error fetching rides: ${e.message}")
+            println("ZwiftDebug: Error fetching rides: ${e.message}")
             emptyList()
         }
     }

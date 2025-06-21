@@ -1,27 +1,20 @@
 package com.danielchew.zwiftviewer
 
-import kotlinx.serialization.json.Json
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.CookieManager
-import androidx.compose.runtime.*
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Modifier
 import android.content.Context
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
-
-suspend fun getZwiftPowerRides(response: String): List<ZwiftPowerRide> {
-    val rides = Json.decodeFromString<List<ZwiftPowerRide>>(response)
-    println("ZwiftDebug: Parsed ${rides.size} rides from response")
-    return rides
-}
+import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
 fun ZwiftPowerLoginScreen(
     onCookiesExtracted: (Map<String, String>) -> Unit,
     onPageUrlChanged: (String) -> Unit,
+    onLoginSuccess: () -> Unit,
     modifier: Modifier,
     urlToLoad: String
 ) {
@@ -67,6 +60,7 @@ fun ZwiftPowerLoginScreen(
                                 println("ZwiftDebug: Parsed cookie keys: ${parsedCookies.keys}")
                                 println("ZwiftDebug: ✅ Extracted cookies passed to Main: ${parsedCookies.keys}")
                                 onCookiesExtracted(parsedCookies)
+                                onLoginSuccess()
                                 println("ZwiftDebug: ✅ onCookiesExtracted invoked.")
                             }
                         }

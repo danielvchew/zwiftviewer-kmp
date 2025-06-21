@@ -16,9 +16,9 @@ data class ZwiftPowerActivityResponse(
     @ObjCName("ZwiftPowerActivityDataItem")
     @Serializable
     data class DataItem(
-        @SerialName("zaid") val id: String? = null,
-        @SerialName("title") val name: String? = null,
-        @SerialName("date") val date: Long? = null,
+        @SerialName("zaid") val zaid: String? = null,
+        @SerialName("title") val title: String? = null,
+        @SerialName("date") val date: StatWrapper? = null,
         @SerialName("avg_cadence") val avgCadence: StatWrapper? = null,
         @SerialName("avg_hr") val avgHr: StatWrapper? = null,
         @SerialName("avg_power") val avgPower: StatWrapper? = null,
