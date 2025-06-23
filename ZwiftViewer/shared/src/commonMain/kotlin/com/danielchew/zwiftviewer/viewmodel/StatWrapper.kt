@@ -1,3 +1,5 @@
+@file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+
 package com.danielchew.zwiftviewer.viewmodel
 
 import kotlinx.serialization.KSerializer

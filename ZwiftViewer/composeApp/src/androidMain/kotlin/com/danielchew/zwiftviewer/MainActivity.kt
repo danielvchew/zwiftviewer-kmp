@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.danielchew.zwiftviewer.utils.CookieStoreInstance
 import androidx.navigation.compose.rememberNavController
 import com.danielchew.zwiftviewer.navigation.AppNavHost
+import com.danielchew.zwiftviewer.ui.login.ZwiftPowerLoginScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

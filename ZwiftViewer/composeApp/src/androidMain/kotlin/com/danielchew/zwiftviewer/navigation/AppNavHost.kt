@@ -9,7 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.danielchew.zwiftviewer.ZwiftPowerLoginScreen
+import com.danielchew.zwiftviewer.ui.login.ZwiftPowerLoginScreen
 import com.danielchew.zwiftviewer.ui.ridelist.RideListScreen
 import com.danielchew.zwiftviewer.ui.ridedetail.RideDetailScreen
 
