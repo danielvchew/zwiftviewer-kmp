@@ -4,5 +4,5 @@ interface RideFetcher {
     suspend fun getUserRideHistory(
         zwiftId: String,
         cookieHeader: String
-    ): List<ZwiftPowerActivityResponse.DataItem>
+    ): List<Ride>
 }

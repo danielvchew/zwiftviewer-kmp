@@ -1,10 +1,8 @@
 package com.danielchew.zwiftviewer.bridge
 
-import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse
+import com.danielchew.zwiftviewer.network.ActivityResponse
+import com.danielchew.zwiftviewer.network.Ride
 import com.danielchew.zwiftviewer.network.ZwiftPowerRideFetcher
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.request.header
-import kotlinx.coroutines.runBlocking
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
 
@@ -12,7 +10,7 @@ import kotlin.native.ObjCName
 @ObjCName("RideApiBridge", exact = true)
 class RideApi {
 
-    suspend fun getUserRideHistory(zwiftId: String, cookies: Map<String, String>): List<ZwiftPowerActivityResponse.DataItem> {
+    suspend fun getUserRideHistory(zwiftId: String, cookies: Map<String, String>): List<Ride> {
         println("ZwiftDebug: getUserRideHistory received cookies: ${cookies.keys}")
 
         val cookieHeader = cookies

@@ -14,7 +14,7 @@ object ZwiftPowerRideFetcher : RideFetcher {
     override suspend fun getUserRideHistory(
         zwiftId: String,
         cookieHeader: String
-    ): List<ZwiftPowerActivityResponse.DataItem> {
+    ): List<Ride> {
         return try {
             val timestamp = getCurrentTimeMillis()
             val url = "https://zwiftpower.com/api3.php?do=activities&z=$zwiftId&_=$timestamp"
@@ -42,7 +42,7 @@ object ZwiftPowerRideFetcher : RideFetcher {
             val json = Json { ignoreUnknownKeys = true }
 
             val parsed = try {
-                json.decodeFromString<ZwiftPowerActivityResponse>(rawBody)
+                json.decodeFromString<ActivityResponse>(rawBody)
             } catch (e: Exception) {
                 println("ZwiftDebug: Parse error: ${e.message}")
                 throw e
