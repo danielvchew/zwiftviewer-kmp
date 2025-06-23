@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B4002C62E035182007F528C /* Shared.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; };
-		1B4002C72E035182007F528C /* Shared.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B82A6E22E09223B00DC11DF /* Shared.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; };
+		1B82A6E32E09223B00DC11DF /* Shared.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6353462E00AFF500C76C3B /* Shared.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,13 +29,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1B4002C82E035182007F528C /* Embed Frameworks */ = {
+		1B82A6E42E09223B00DC11DF /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1B4002C72E035182007F528C /* Shared.xcframework in Embed Frameworks */,
+				1B82A6E32E09223B00DC11DF /* Shared.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B4002C62E035182007F528C /* Shared.xcframework in Frameworks */,
+				1B82A6E22E09223B00DC11DF /* Shared.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,7 +134,7 @@
 				1BC89CB62DFE1B6200E0ADB1 /* Sources */,
 				1BC89CB72DFE1B6200E0ADB1 /* Frameworks */,
 				1BC89CB82DFE1B6200E0ADB1 /* Resources */,
-				1B4002C82E035182007F528C /* Embed Frameworks */,
+				1B82A6E42E09223B00DC11DF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

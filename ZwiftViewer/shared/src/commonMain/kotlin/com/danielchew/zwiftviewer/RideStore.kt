@@ -1,7 +1,7 @@
 package com.danielchew.zwiftviewer
 
-import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse
+import com.danielchew.zwiftviewer.network.Ride
 
 object RideStore {
-    var rides: List<ZwiftPowerActivityResponse.DataItem> = emptyList()
+    var rides: List<Ride> = emptyList()
 }

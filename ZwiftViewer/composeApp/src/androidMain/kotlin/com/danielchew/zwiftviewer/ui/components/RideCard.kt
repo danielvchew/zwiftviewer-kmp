@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse.DataItem
+import com.danielchew.zwiftviewer.network.Ride
 import com.danielchew.zwiftviewer.viewmodel.StatWrapper
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,7 +35,7 @@ fun formatElapsed(seconds: Int): String {
 }
 
 @Composable
-fun RideCard(ride: DataItem) {
+fun RideCard(ride: Ride) {
     Card(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         // Debug logs
         Log.d("ZwiftDebug", "RideCard: title=${ride.title}, date=${ride.date}, distance=${ride.distance}, elevation=${ride.elevation}")

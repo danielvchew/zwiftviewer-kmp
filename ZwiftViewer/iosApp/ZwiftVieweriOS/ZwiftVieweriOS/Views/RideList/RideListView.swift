@@ -7,17 +7,28 @@
 
 import SwiftUI
 import Shared
+import os
+
+private let logger = Logger(subsystem: "com.danielchew.zwiftviewer", category: "ZwiftDebug")
 
 struct RideListView: View {
     let cookies: [HTTPCookie]
-    let onSelect: (ZwiftPowerRide) -> Void
+    let onSelect: (Ride) -> Void
+    let onBack: (() -> Void)?
 
-    @State private var rides: [ZwiftPowerRide] = []
+    @State private var rides: [Ride] = []
     @State private var isLoading: Bool = true
     @State private var error: String?
 
     var body: some View {
-        VStack(alignment: .leading) {
+        List {
+            if let onBack = onBack {
+                Button(action: onBack) {
+                    Label("Back", systemImage: "chevron.left")
+                        .foregroundColor(.blue)
+                        .padding(.bottom)
+                }
+            }
             Text("Ride List")
                 .font(.title2)
                 .bold()
@@ -29,50 +40,64 @@ struct RideListView: View {
                 Text("Error: \(error)")
                     .foregroundColor(.red)
             } else {
-                List(rides, id: \.zid) { ride in
+                ForEach(rides, id: \.zaid) { ride in
                     Button(action: {
                         onSelect(ride)
                     }) {
                         VStack(alignment: .leading) {
-                            Text(ride.title)
+                            Text(ride.title ?? "Unknown Ride")
                                 .font(.headline)
-                            if let power = ride.avgPower.first {
-                                Text("Avg Power: \(power) W")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
+                            Text("Avg Power: \(ride.avgPower?.label() ?? "N/A") W")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
                         }
                         .padding(.vertical, 4)
                     }
                 }
-                .listStyle(PlainListStyle())
             }
         }
+        .listStyle(PlainListStyle())
         .padding()
         .onAppear {
-            self.rides = [
-                ZwiftPowerRide(
-                    date: 1720000000000,
-                    zaid: "mockZaid",
-                    title: "Mock Ride 1",
-                    zid: "mockZid",
-                    elapsed: [3600],
-                    distance: 25000,
-                    worldId: "1",
-                    sport: "cycling",
-                    fit: "fit789",
-                    aid: "aid999",
-                    avgSpeed: 38,
-                    avgHr: [140],
-                    maxHr: [180],
-                    avgCadence: [85],
-                    calories: 600,
-                    avgPower: [185],
-                    elevation: 300,
-                    zeid: 1234
-                )
-            ]
-            self.isLoading = false
+            logger.info("RideListView: onAppear triggered")
+            Task {
+                logger.info("RideListView: loading rides with cookies: \(String(describing: cookies.map { "\($0.name)=\($0.value)" }))")
+                do {
+                    let cookieMap = Dictionary(uniqueKeysWithValues: cookies.map { ($0.name, $0.value) })
+                    logger.info("RideListView: parsed cookieMap keys: \(String(describing: cookieMap.keys))")
+                    logger.info("RideListView: profileUrl from cookieMap = \(String(describing: cookieMap["profileUrl"]))")
+                    guard let profileUrl = cookieMap["profileUrl"], !profileUrl.isEmpty else {
+                        logger.error("RideListView: profileUrl missing from cookieMap — aborting ride fetch.")
+                        self.error = "Missing profile URL"
+                        return
+                    }
+
+                    logger.info("RideListView: verifying profileUrl before extracting Zwift ID = \(profileUrl)")
+                    let store = IOSCookieStore()
+                    logger.info("RideListView: calling legacyGetZwiftId()")
+                    guard let zwiftId = try await store.legacyGetZwiftId(), !zwiftId.isEmpty else {
+                        logger.error("RideListView: zwiftId is nil or empty — aborting ride fetch.")
+                        self.error = "Unable to retrieve Zwift ID"
+                        return
+                    }
+                    logger.info("RideListView: Successfully extracted zwiftId = \(zwiftId)")
+                    let cookieHeader = cookieMap.map { "\($0.key)=\($0.value)" }.joined(separator: "; ")
+                    logger.info("RideListView: calling getUserRideHistory with zwiftId = \(zwiftId)")
+                    let realRides = try await ZwiftPowerRideFetcher.shared.getUserRideHistory(
+                        zwiftId: zwiftId,
+                        cookieHeader: cookieHeader
+                    )
+                    // let realRides = try await ZwiftPowerRideFetcher.shared.getUserRideHistory(profileId: zwiftId, cookies: cookieMap)
+                    logger.info("RideListView: fetched \(realRides.count) rides")
+                    self.rides = realRides
+                    self.isLoading = false
+                    logger.info("RideListView: successfully loaded \(realRides.count) rides")
+                } catch {
+                    logger.error("RideListView: error fetching rides - \(String(describing: error.localizedDescription))")
+                    self.error = error.localizedDescription
+                    self.isLoading = false
+                }
+            }
         }
     }
 }

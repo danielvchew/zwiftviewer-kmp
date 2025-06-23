@@ -2,8 +2,7 @@ package com.danielchew.zwiftviewer.viewmodel
 
 import com.danielchew.zwiftviewer.bridge.RideApi
 import com.danielchew.zwiftviewer.network.RideUiState
-import com.danielchew.zwiftviewer.network.RideFetcher
-import com.danielchew.zwiftviewer.network.ZwiftPowerActivityResponse
+import com.danielchew.zwiftviewer.network.Ride
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +16,7 @@ class RideViewModel (
     private val _state = MutableStateFlow<RideUiState>(RideUiState.Loading)
     val state: StateFlow<RideUiState> = _state
 
-    fun setRides(newRides: List<ZwiftPowerActivityResponse.DataItem>) {
+    fun setRides(newRides: List<Ride>) {
         _state.value = RideUiState.Success(newRides)
     }
 
