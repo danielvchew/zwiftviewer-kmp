@@ -28,48 +28,73 @@ struct RideDetailView: View {
                                 .padding(.bottom)
                         }
                     }
-                    if let date = ride.date?.label() {
-                        Text(date).font(.headline)
-                    }
 
                     if let title = ride.title {
-                        Text(title).font(.title2).bold()
+                        Text(title)
+                            .font(.title3)
+                            .bold()
+                            .padding(.bottom, 8)
                     }
 
-                    if let distance = ride.distance {
-                        Text("Distance: \(String(format: "%.1f", Double(truncating: distance) / 1000)) km")
-                    }
+                    let dateString: String? = {
+                        if let epochSeconds = ride.date?.toEpochSecondsOrNull() {
+                            let timeInterval = TimeInterval(truncating: epochSeconds)
+                            let date = Date(timeIntervalSince1970: timeInterval)
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "MMM dd, yyyy"
+                            return formatter.string(from: date)
+                        }
+                        return nil
+                    }()
 
-                    if let elevation = ride.elevation {
-                        Text("Elevation: \(Int(truncating: elevation)) ft")
-                    }
-
-                    if let time = ride.elapsed?.label() {
-                        Text(time)
-                    }
-
-                    if let speed = ride.avgSpeed {
-                        Text(String(format: "Avg Speed: %.2f km/h", Double(truncating: speed)))
-                    }
-
-                    if let hr = ride.avgHr?.label() {
-                        Text("Avg HR: \(hr) bpm")
-                    }
-
-                    if let maxHr = ride.maxHr?.label() {
-                        Text("Max HR: \(maxHr) bpm")
-                    }
-
-                    if let cadence = ride.avgCadence?.label() {
-                        Text("Avg Cadence: \(cadence) rpm")
-                    }
-
-                    if let calories = ride.calories {
-                        Text("Calories: \(Int(truncating: calories)) kcal")
+                    if let dateString = dateString {
+                        Text("📅 Date: \(dateString)")
                     }
 
                     if let sport = ride.sport {
-                        Text("Sport: \(sport)")
+                        Text("🏃 Sport: \(sport)")
+                    }
+
+                    if let time = ride.elapsed?.label() {
+                        Text("🕒 Elapsed: \(time)")
+                    }
+
+                    if let distance = ride.distance?.doubleValue {
+                        Text("📏 Distance: \(String(format: "%.1f", distance / 1000)) km")
+                    }
+
+                    if let elevation = ride.elevation?.doubleValue {
+                        let elevationFeet = elevation * 3.28084
+                        Text("🧗 Elevation: \(String(format: "%.0f", elevationFeet)) ft")
+                    }
+
+                    if let distanceMeters = ride.distance?.doubleValue,
+                       let elapsedSeconds = ride.elapsed?.secondsValue?.doubleValue,
+                       elapsedSeconds > 0 {
+                        let miles = distanceMeters * 0.000621371
+                        let hours = elapsedSeconds / 3600
+                        let mph = miles / hours
+                        Text("🚴 Avg Speed: \(String(format: "%.1f", mph)) mi/h")
+                    }
+
+                    if let hr = ride.avgHr?.label() {
+                        Text("💓 Avg HR: \(hr) bpm")
+                    }
+
+                    if let maxHr = ride.maxHr?.label() {
+                        Text("🔺 Max HR: \(maxHr) bpm")
+                    }
+
+                    if let power = ride.avgPower?.doubleValue?.doubleValue, power > 0 {
+                        Text("⚡ Avg Power: \(String(format: "%.0f", power)) W")
+                    }
+
+                    if let cadence = ride.avgCadence?.label() {
+                        Text("🔁 Avg Cadence: \(cadence) rpm")
+                    }
+
+                    if let calories = ride.calories?.doubleValue {
+                        Text("🔥 Calories: \(String(format: "%.0f", calories)) kcal")
                     }
 
                     Spacer().frame(minHeight: 1)
