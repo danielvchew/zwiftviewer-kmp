@@ -1,3 +1,39 @@
+func formatRideDate(_ ride: Ride) -> String {
+    guard let dateWrapper = ride.date,
+          let epochSeconds = dateWrapper.toEpochSecondsOrNull() else {
+        return "Unknown Date"
+    }
+    
+    let date = Date(timeIntervalSince1970: TimeInterval(truncating: epochSeconds))
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MMM d, yyyy"
+    return formatter.string(from: date)
+}
+
+func rideStatsText(for ride: Ride) -> (String, String, String) {
+    var distanceText = ""
+    var elevationText = ""
+    var elapsedText = ""
+
+    if let distance = ride.distance {
+        let miles = Double(truncating: distance) * 0.000621371
+        distanceText = String(format: "%.1f mi", miles)
+    }
+
+    if let elevation = ride.elevation {
+        let feet = Double(truncating: elevation) * 3.28084
+        elevationText = String(format: "%.0f ft", feet)
+    }
+
+    if let elapsedWrapper = ride.elapsed,
+       let totalSeconds = elapsedWrapper.doubleValue {
+        let hours = Int(truncating: totalSeconds) / 3600
+        let minutes = (Int(truncating: totalSeconds) % 3600) / 60
+        elapsedText = hours > 0 ? "\(hours)h \(minutes)m" : "\(minutes)m"
+    }
+
+    return (distanceText, elevationText, elapsedText)
+}
 //
 //  RideListView.swift
 //  ZwiftVieweriOS
@@ -41,15 +77,30 @@ struct RideListView: View {
                     .foregroundColor(.red)
             } else {
                 ForEach(rides, id: \.zaid) { ride in
+                    let dateText = formatRideDate(ride)
+                    let (distanceText, elevationText, elapsedText) = rideStatsText(for: ride)
+
                     Button(action: {
                         onSelect(ride)
                     }) {
-                        VStack(alignment: .leading) {
-                            Text(ride.title ?? "Unknown Ride")
-                                .font(.headline)
-                            Text("Avg Power: \(ride.avgPower?.label() ?? "N/A") W")
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(dateText)
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.secondary)
+                            if let title = ride.title {
+                                Text(title)
+                                    .font(.headline)
+                            }
+                            HStack(spacing: 0) {
+                                Text(distanceText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text(elevationText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text(elapsedText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
                         }
                         .padding(.vertical, 4)
                     }
