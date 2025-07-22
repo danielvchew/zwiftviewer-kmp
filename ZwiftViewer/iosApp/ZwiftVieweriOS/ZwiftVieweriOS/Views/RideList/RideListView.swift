@@ -1,3 +1,21 @@
+//
+//  RideListView.swift
+//  ZwiftVieweriOS
+//
+//  Created by Daniel Chew on 6/17/25.
+//
+
+import SwiftUI
+import os
+import WebKit
+import Shared
+
+private let logger = Logger(subsystem: "com.danielchew.zwiftviewer", category: "ZwiftDebug")
+
+private func cookieHeader(from cookies: [HTTPCookie]) -> String {
+    cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
+}
+
 func formatRideDate(_ ride: Ride) -> String {
     guard let dateWrapper = ride.date,
           let epochSeconds = dateWrapper.toEpochSecondsOrNull() else {
@@ -34,18 +52,6 @@ func rideStatsText(for ride: Ride) -> (String, String, String) {
 
     return (distanceText, elevationText, elapsedText)
 }
-//
-//  RideListView.swift
-//  ZwiftVieweriOS
-//
-//  Created by Daniel Chew on 6/17/25.
-//
-
-import SwiftUI
-import Shared
-import os
-
-private let logger = Logger(subsystem: "com.danielchew.zwiftviewer", category: "ZwiftDebug")
 
 struct RideListView: View {
     let cookies: [HTTPCookie]
@@ -109,6 +115,16 @@ struct RideListView: View {
         }
         .listStyle(PlainListStyle())
         .padding()
+        .toolbar {
+            Button("Logout") {
+                Task {
+                    let header = cookieHeader(from: cookies)
+                    try? await Logout_iosKt.logout(cookieHeader: header)
+                    Logout_iosKt.clearAllZwiftCookies()
+                    onBack?()
+                }
+            }
+        }
         .onAppear {
             logger.info("RideListView: onAppear triggered")
             Task {
