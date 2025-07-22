@@ -1,5 +1,7 @@
 package com.danielchew.zwiftviewer.ui.ridelist
 
+import android.webkit.CookieManager
+
 import android.util.Log
 import java.util.Locale
 
@@ -24,55 +26,88 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import com.danielchew.zwiftviewer.auth.logout
+import com.danielchew.zwiftviewer.auth.clearAllZwiftCookies
+
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun RideListScreen(navController: NavController) {
+    val scope = rememberCoroutineScope()
     val viewModel: RideListViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        item {
-            Text("Ride List", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(16.dp))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Rides") },
+                actions = {
+                    TextButton(onClick = {
+                        scope.launch {
+                            // Build the ZwiftPower cookie header directly from WebView cookies
+                            val cookieHeader = android.webkit.CookieManager.getInstance()
+                                .getCookie("https://zwiftpower.com") ?: ""
+                            logout(cookieHeader)
+                            clearAllZwiftCookies()
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    }) { Text("Logout") }
+                }
+            )
         }
-
-        items(uiState.rides) { ride ->
-            val distanceMi = String.format(Locale.US, "%.1f mi", (ride.distance ?: 0.0) * 0.000621371)
-            val elevationFt = String.format(Locale.US, "%.0f ft", (ride.elevation ?: 0.0).toDouble() * 3.28084)
-            val elapsedSeconds = ride.elapsed?.toInt() ?: 0
-            val hours = elapsedSeconds / 3600
-            val minutes = (elapsedSeconds % 3600) / 60
-            val elapsedTime = buildString {
-                if (hours > 0) append("$hours h ")
-                append("$minutes m")
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            item {
+                Text("Ride List", style = MaterialTheme.typography.headlineMedium)
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            val rideDateStr = ride.date?.toInt()?.let { timestamp ->
-                val millis = timestamp * 1000L
-                val sdf = java.text.SimpleDateFormat("MMM d, yyyy", Locale.US)
-                sdf.format(java.util.Date(millis))
-            } ?: "—"
+            items(uiState.rides) { ride ->
+                val distanceMi = String.format(Locale.US, "%.1f mi", (ride.distance ?: 0.0) * 0.000621371)
+                val elevationFt = String.format(Locale.US, "%.0f ft", (ride.elevation ?: 0.0).toDouble() * 3.28084)
+                val elapsedSeconds = ride.elapsed?.toInt() ?: 0
+                val hours = elapsedSeconds / 3600
+                val minutes = (elapsedSeconds % 3600) / 60
+                val elapsedTime = buildString {
+                    if (hours > 0) append("$hours h ")
+                    append("$minutes m")
+                }
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .clickable {
-                        Log.d("ZwiftDebug", "Ride tapped: id=${ride.zaid}, title=${ride.title}")
-                        navController.navigate("rideDetail/${ride.zaid}")
-                    }
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(text = rideDateStr, style = MaterialTheme.typography.bodySmall)
-                    Text(text = ride.title ?: "Untitled Ride", style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row {
-                        Text(text = distanceMi, modifier = Modifier.weight(1f))
-                        Text(text = elevationFt, modifier = Modifier.weight(1f))
-                        Text(text = elapsedTime, modifier = Modifier.weight(1f))
+                val rideDateStr = ride.date?.toInt()?.let { timestamp ->
+                    val millis = timestamp * 1000L
+                    val sdf = java.text.SimpleDateFormat("MMM d, yyyy", Locale.US)
+                    sdf.format(java.util.Date(millis))
+                } ?: "—"
+
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .clickable {
+                            Log.d("ZwiftDebug", "Ride tapped: id=${ride.zaid}, title=${ride.title}")
+                            navController.navigate("rideDetail/${ride.zaid}")
+                        }
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = rideDateStr, style = MaterialTheme.typography.bodySmall)
+                        Text(text = ride.title ?: "Untitled Ride", style = MaterialTheme.typography.titleMedium)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row {
+                            Text(text = distanceMi, modifier = Modifier.weight(1f))
+                            Text(text = elevationFt, modifier = Modifier.weight(1f))
+                            Text(text = elapsedTime, modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }

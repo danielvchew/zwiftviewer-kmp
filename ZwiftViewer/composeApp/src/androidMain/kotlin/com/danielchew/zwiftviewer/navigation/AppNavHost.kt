@@ -33,7 +33,10 @@ fun AppNavHost(
                 onPageUrlChanged = {},
                 onLoginSuccess = {
                     Log.d("ZwiftDebug", "Login successful. Navigating to RideListScreen")
-                    navController.navigate(Screen.Rides.route)
+                    navController.navigate(Screen.Rides.route) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
                 },
                 modifier = modifier,
                 urlToLoad = urlToLoad
