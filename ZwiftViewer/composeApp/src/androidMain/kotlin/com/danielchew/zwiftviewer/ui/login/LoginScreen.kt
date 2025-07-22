@@ -21,6 +21,7 @@ fun ZwiftPowerLoginScreen(
     Box(modifier = modifier) {
         AndroidView(
             factory = { context: Context ->
+                var loginTriggered = false
                 WebView(context).apply {
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -68,7 +69,13 @@ fun ZwiftPowerLoginScreen(
                                         enriched["profileUrl"] = profileUrl
                                         onCookiesExtracted(enriched)
 
-                                        onLoginSuccess()
+                                        if (!loginTriggered) {
+                                            println("ZwiftDebug: firing onLoginSuccess for first time")
+                                            loginTriggered = true
+                                            onLoginSuccess()
+                                        } else {
+                                            println("ZwiftDebug: onLoginSuccess already fired, skipping")
+                                        }
                                     } else {
                                         println("ZwiftDebug: still unauthenticated – stay on login screen")
                                     }
