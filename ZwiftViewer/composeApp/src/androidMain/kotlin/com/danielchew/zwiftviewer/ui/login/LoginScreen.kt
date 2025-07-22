@@ -52,8 +52,27 @@ fun ZwiftPowerLoginScreen(
                             onCookiesExtracted(parsedCookies)
 
                             if (url.contains("profile.php")) {
-                                println("ZwiftDebug: Detected profile.php – assuming login success.")
-                                onLoginSuccess()
+                                // Run JS in the loaded page to find a real Zwift profile link
+                                evaluateJavascript(
+                                    "(function() {" +
+                                        "const link = document.querySelector('a[href*=\"profile.php?z=\"]');" +
+                                        "return link ? link.href : '';" +
+                                    "})()"
+                                ) { jsResult ->
+                                    val profileUrl = jsResult.trim('\"')
+                                    if (profileUrl.isNotBlank()) {
+                                        println("ZwiftDebug: extracted profile URL = $profileUrl")
+
+                                        // Enrich the cookie map so the ViewModel can find the Zwift ID
+                                        val enriched = parsedCookies.toMutableMap()
+                                        enriched["profileUrl"] = profileUrl
+                                        onCookiesExtracted(enriched)
+
+                                        onLoginSuccess()
+                                    } else {
+                                        println("ZwiftDebug: still unauthenticated – stay on login screen")
+                                    }
+                                }
                             }
                         }
                     }
